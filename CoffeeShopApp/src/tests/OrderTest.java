@@ -17,7 +17,7 @@ public class OrderTest {
     private MenuItem cookies;
 
     @BeforeEach
-    void setUp() throws InvalidMenuItemException {
+    void init() throws InvalidMenuItemException {
         espresso = new MenuItem("BEV-001", "Espresso", 2.50, "BEV");
         cack = new MenuItem("FOOD-001", "cack", 2.80, "FOOD");
         cookies = new MenuItem("FOOD-002", "cookies", 2.50, "FOOD");

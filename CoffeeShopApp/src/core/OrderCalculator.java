@@ -14,7 +14,7 @@ public class OrderCalculator {
         int foodCount = order.countCategoryItems("FOOD");
 
         if (bevCount >=1 && foodCount >= 2){comboDiscount = COMBO_DISCOUNT_RATE * orderPrice;}
-        if (bevCount > 3){bulkDiscount = BULK_DISCOUNT_RATE * orderPrice;}
+        if (bevCount >= 3){bulkDiscount = BULK_DISCOUNT_RATE * orderPrice;}
         double bestDiscount = Math.max(comboDiscount, bulkDiscount);
         return bestDiscount;
     }
