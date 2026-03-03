@@ -20,9 +20,10 @@ public class OrderGUI extends JFrame {
     private final OrderCalculator calculator = new OrderCalculator();
 
     private final List<MenuItem> selectedItems = new ArrayList<>();
+    private final List<JCheckBox> checkBoxes = new ArrayList<>();
 
     private JTextArea billArea;
-//    Private JLabel statusLabel;
+    private JLabel statusLabel;
     private JLabel itemCountLabel;
 
     private int customerCounter = 1;
@@ -37,7 +38,7 @@ public class OrderGUI extends JFrame {
         addWindowListener(new java.awt.event.WindowAdapter(){
             @Override
             public void windowClosing(java.awt.event.WindowEvent e){
-//                handleExit();
+                handleExit();
             }
         });
 
@@ -68,6 +69,7 @@ public class OrderGUI extends JFrame {
                 itemCountLabel.setText("Items selected: " + selectedItems.size());
                 updateBill();
             });
+            checkBoxes.add(cbox);
             panel.add(cbox);
         }
         return new JScrollPane(panel);
@@ -93,15 +95,18 @@ public class OrderGUI extends JFrame {
         buttonsRow.add(reportBtn);
         buttonsRow.add(clearBtn);
 
-//        completeBtn.addActionListener(e -> completeOrder());
+        completeBtn.addActionListener(e -> completeOrder());
 //        reportBtn.addActionListener(e -> showReport());
-//        clearBtn.addActionListener(e -> clearSelection());
+        clearBtn.addActionListener(e -> clearSelection());
         itemCountLabel = new JLabel("Items selected: 0");
+        statusLabel = new JLabel("Ready.");
 
         JPanel infoRow = new JPanel(new BorderLayout());
         infoRow.add(itemCountLabel, BorderLayout.EAST);
+        infoRow.add(itemCountLabel, BorderLayout.WEST);
+
         panel.add(buttonsRow, BorderLayout.CENTER);
-        panel.add(infoRow,   BorderLayout.SOUTH);
+        panel.add(infoRow, BorderLayout.SOUTH);
 
         return panel;
     }
@@ -135,6 +140,54 @@ public class OrderGUI extends JFrame {
 
         } catch (InvalidOrderException ex) {
             billArea.setText("Error calculating order.");
+        }
+    }
+
+    private void completeOrder(){
+        if (selectedItems.isEmpty()) {
+            statusLabel.setText("Please Select items first.");
+            return;
+        }
+
+        try{
+            String customerId =  String.format("CUST-%03d", customerCounter++);
+            Order order = new Order(customerId, java.time.LocalDateTime.now().toString());
+
+            for(MenuItem item : selectedItems) order.addItem(item);
+            orderManager.addOrder(order);
+            statusLabel.setText("Order saved : " + customerId);
+
+            clearSelection();
+        } catch (InvalidOrderException ex) {
+            statusLabel.setText("Error: " + ex.getMessage());
+        }
+    }
+
+    private void clearSelection(){
+        selectedItems.clear();
+        itemCountLabel.setText("Items selected: 0");
+        for (JCheckBox cb : checkBoxes) {
+            cb.setSelected(false);
+        }
+        updateBill();
+        statusLabel.setText("Selection cleared.");
+    }
+
+    private void handleExit(){
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "Show final report before exit?",
+            "Exit",
+            JOptionPane.YES_NO_CANCEL_OPTION
+        );
+        if (choice == JOptionPane.YES_OPTION){
+//            showReport();
+            dispose();
+            System.exit(0);
+        }
+        else if (choice == JOptionPane.NO_OPTION){
+            dispose();
+            System.exit(0);
         }
     }
 
