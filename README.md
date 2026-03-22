@@ -2,4 +2,4 @@
 F21AS Advanced Software Engineering
 
 ## Group Members
-- Moaaz Elmaraskby
+- Moaaz Elmarakby
