@@ -96,7 +96,7 @@ public class OrderGUI extends JFrame {
         buttonsRow.add(clearBtn);
 
         completeBtn.addActionListener(e -> completeOrder());
-//        reportBtn.addActionListener(e -> showReport());
+        reportBtn.addActionListener(e -> showReport());
         clearBtn.addActionListener(e -> clearSelection());
         itemCountLabel = new JLabel("Items selected: 0");
         statusLabel = new JLabel("Ready.");
@@ -155,6 +155,14 @@ public class OrderGUI extends JFrame {
 
             for(MenuItem item : selectedItems) order.addItem(item);
             orderManager.addOrder(order);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Order " + customerId + " added successfully!",
+                    "Order Confirmed",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
             statusLabel.setText("Order saved : " + customerId);
 
             clearSelection();
@@ -181,7 +189,7 @@ public class OrderGUI extends JFrame {
             JOptionPane.YES_NO_CANCEL_OPTION
         );
         if (choice == JOptionPane.YES_OPTION){
-//            showReport();
+            showReport();
             dispose();
             System.exit(0);
         }
@@ -189,6 +197,21 @@ public class OrderGUI extends JFrame {
             dispose();
             System.exit(0);
         }
+    }
+
+    private void showReport() {
+        String report = orderManager.generateReport(menu);
+        JTextArea area = new JTextArea(report);
+
+        JScrollPane scroll = new JScrollPane(area);
+        scroll.setPreferredSize(new Dimension(640, 440));
+
+        JOptionPane.showMessageDialog(
+                this,
+                scroll,
+                "Summary Report",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
 

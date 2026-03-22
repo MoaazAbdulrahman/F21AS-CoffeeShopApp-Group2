@@ -40,4 +40,48 @@ public class OrderManager {
     public int getTotalOrderCount() {
         return ordersList.size();
     }
+
+    public String generateReport(Map<String, MenuItem> menu) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("=== Coffee Shop Report ===\n\n");
+        sb.append("Total Orders: ").append(ordersList.size()).append("\n\n");
+
+        sb.append("Menu Items:\n");
+
+        for (String itemId : menu.keySet()) {
+            MenuItem item = menu.get(itemId);
+            int count = itemOrderCount.getOrDefault(itemId, 0);
+
+            sb.append(itemId)
+                    .append(" - ")
+                    .append(item.getDescription())
+                    .append(" | ordered: ")
+                    .append(count)
+                    .append(" | price: £")
+                    .append(String.format("%.2f", item.getCost()))
+                    .append("\n");
+        }
+
+        sb.append("\nOrders:\n");
+
+        double grandTotal = 0;
+
+        for (Order order : ordersList) {
+            double discount = orderCalculator.calculateDiscount(order);
+            double total = orderCalculator.calculateTotalPrice(order);
+            grandTotal += total;
+
+            sb.append(order.getCustomerId())
+                    .append(" | items: ").append(order.getItemCount())
+                    .append(" | total: £").append(String.format("%.2f", total))
+                    .append("\n");
+        }
+
+        sb.append("\nGrand Total: £")
+                .append(String.format("%.2f", grandTotal))
+                .append("\n");
+
+        return sb.toString();
+    }
 }
