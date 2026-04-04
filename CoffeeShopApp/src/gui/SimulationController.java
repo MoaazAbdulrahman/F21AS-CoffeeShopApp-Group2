@@ -74,4 +74,9 @@ public class SimulationController {
     public List<Server> getServersList(){
         return servers;
     }
+
+    public SimulationGUI getSimulatorGUI(){
+        return simulatorGUI;
+    }
+
 }
