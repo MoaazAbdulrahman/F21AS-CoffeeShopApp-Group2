@@ -84,4 +84,8 @@ public class OrderManager {
 
         return sb.toString();
     }
+
+    public List<Order> getOrdersList() {
+        return new ArrayList<>(ordersList);
+    }
 }
